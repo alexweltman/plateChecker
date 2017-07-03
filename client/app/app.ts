@@ -10,6 +10,7 @@ const ngSanitize = require('angular-sanitize');
 const uiRouter = require('angular-ui-router');
 
 import 'angular-validation-match';
+import 'angular-ui-bootstrap';
 
 
 
@@ -19,7 +20,6 @@ import _Auth from '../components/auth/auth.module';
 import account from './account';
 import admin from './admin';
 import navbar from '../components/navbar/navbar.component';
-import footer from '../components/footer/footer.component';
 import main from './main/main.component';
 import constants from './app.constants';
 import util from '../components/util/util.module';
@@ -40,8 +40,8 @@ angular.module('plateCheckerApp', [
   account,
   admin,
   'validation.match',
-    navbar,
-  footer,
+  'ui.bootstrap',
+  navbar,
   main,
   constants,
 
