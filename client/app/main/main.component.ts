@@ -1,9 +1,26 @@
 const angular = require('angular');
 const uiRouter = require('angular-ui-router');
+const moment = require('moment');
+const DEFAULT_STATE: string = "Colorado";
 import routing from './main.routes';
+
+export interface LicensePLate {
+  number: string,
+  state: string,
+  addedBy: string,
+  createdAt: number
+};
 
 export class MainController {
   private $http;
+  private $scope;
+  private plateToCheck: LicensePlate;
+  private bannerClass: string;
+  private header: string;
+  private subtitle: string;
+  private iconClass: string;
+  private dontAddPlateToDB: boolean;
+  private ranSearch: boolean;
 
   private states: string[] = [
     'Alabama',
@@ -69,17 +86,60 @@ export class MainController {
   /*@ngInject*/
   public constructor($http) {
     this.$http = $http;
+    this.resetVals();
   }
 
-  public registerPlate() {
-    if (this.newThing) {
-      this.$http.post('/api/things', { name: this.newThing });
-      this.newThing = '';
+  private resetVals(): void {
+    this.header = "The Dent Man";
+    this.subtitle = "License Plate Registry";
+    this.dontAddPlateToDB = false;
+    this.ranSearch = false;
+    this.bannerClass = "hero-unit-neutral";
+    this.iconClass = "";
+    this.plateToCheck = {
+      number: "",
+      state: DEFAULT_STATE,
+      addedBy: "",
+      createdAt: 0
+    };
+  }
+
+  private registerPlate(): void {
+    this.$http.post('/api/plates', this.plateToCheck)
+    .then(response => {
+      this.updateViewSuccess(response);
+      this.ranSearch = true;
+    },response => {
+      this.updateViewError(response);
+      this.ranSearch = true;
+    });
+  }
+
+  private updateViewSuccess(response: any): void {
+    this.bannerClass = "hero-unit-success";
+    this.iconClass = "glyphicon glyphicon-ok-circle";
+    this.header = "Good to Go!";
+    this.subtitle = "You are the first person to check this plate.";
+    if (this.dontAddPlateToDB) {
+      this.subtitle += " This plate will remain un-checked, per your request."
+    } else {
+      this.subtitle += " This plate has been registered as checked."
     }
   }
 
-  deleteThing(thing) {
-    this.$http.delete('/api/things/' + thing._id);
+  private updateViewError(response: any): void {
+    let statusCode: number = response.status;
+    this.iconClass = "glyphicon glyphicon-ban-circle";
+    if (statusCode === 409) {
+      let timeString = moment(response.data.createdAt).format('MMMM Do YYYY, h:mm:ss a');
+      this.bannerClass = "hero-unit-failure";
+      this.header = "Already Checked"
+      this.subtitle = `This plate was first checked on ${timeString}.`;
+    } else {
+      this.header = "Error";
+      this.bannerClass = "hero-unit-failure";
+      this.subtitle = "Unable to check license plate. Please try again."
+    }
   }
 }
 

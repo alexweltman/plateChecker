@@ -13,13 +13,31 @@
   letter-spacing: -1px;
 }
 
-.hero-unit {
+.hero-unit-neutral {
   position: relative;
   padding: 30px 15px;
   color: #F5F5F5;
   text-align: center;
   text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
   background: #4393B9;
+}
+
+.hero-unit-success {
+  position: relative;
+  padding: 30px 15px;
+  color: #F5F5F5;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  background: #2ea063;
+}
+
+.hero-unit-failure {
+  position: relative;
+  padding: 30px 15px;
+  color: #F5F5F5;
+  text-align: center;
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+  background: #db0d36;
 }
 
 .navbar-text {
@@ -31,4 +49,8 @@
   font-size: 80px;
   text-transform: uppercase;
   font-family: "Courier New", Courier, monospace
+}
+
+.plateForm {
+  padding-top: 10px;
 }

@@ -1,32 +1,45 @@
-<header class="hero-unit" id="banner">
+<header ng-class="$ctrl.bannerClass" id="banner">
   <div class="container">
-    <h1>The Dent Man</h1>
-    <p class="lead">License Plate Checker</p>
+    <h1><i ng-class="$ctrl.iconClass" ng-show="!!$ctrl.iconClass"></i></h1>
+    <h2>{{$ctrl.header}}</h2>
+    <p class="lead">{{$ctrl.subtitle}}</p>
   </div>
 </header>
 <div class="container">
-  <form>
+  <form class="plateForm" ng-submit="$ctrl.registerPlate()">
     <div class="form-group">
       <label for="exampleInputEmail1">Plate Number</label>
       <input
         type="text"
-        class="form-control plateInput"
+        ng-model="$ctrl.plateToCheck.number"
+        class="form-control input-lg"
         id="plateNumber"
-        maxlength="7">
+        maxlength="7" required>
     </div>
     <div class="form-group">
-    	<label for="state" class="col-sm-2 control-label">State</label>
-      <input
-        type="text"
-        ng-model="$ctrl.chosenState"
-        uib-typeahead="state for state in $ctrl.states | filter:$viewValue | limitTo: 3"
-        class="form-control"/>
-  </div>
+    	<label for="state">State</label>
+      <select
+        class="form-control input-lg"
+        ng-model="$ctrl.plateToCheck.state"
+        ng-options="state for state in $ctrl.states" required></select>
+    </div>
     <div class="checkbox">
       <label>
-        <input type="checkbox"> Do not add plate to registry.
+        <input
+          type="checkbox"
+          ng-model="$ctrl.dontAddPlateToDB"> Do not add plate to registry.
       </label>
     </div>
-    <button type="submit" class="btn btn-default">Check</button>
+    <button
+      type="submit"
+      ng-show="!$ctrl.ranSearch"
+      class="btn btn-lg btn-primary btn-block">
+        <i class="glyphicon glyphicon-search"></i> Check License Plate</button>
+    <button
+      type="button"
+      ng-show="$ctrl.ranSearch"
+      ng-click="$ctrl.resetVals()"
+      class="btn btn-lg btn-warning btn-block">
+      <i class="glyphicon glyphicon-refresh"></i> Clear Selection</button>
   </form>
 </div>
