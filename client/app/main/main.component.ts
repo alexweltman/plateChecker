@@ -2,6 +2,7 @@ const angular = require('angular');
 const uiRouter = require('angular-ui-router');
 const moment = require('moment');
 const DEFAULT_STATE: string = "Colorado";
+const PLATE_API_URI: string = "/api/plates";
 import routing from './main.routes';
 
 export interface LicensePLate {
@@ -20,7 +21,6 @@ export class MainController {
   private subtitle: string;
   private iconClass: string;
   private dontAddPlateToDB: boolean;
-  private ranSearch: boolean;
 
   private states: string[] = [
     'Alabama',
@@ -93,7 +93,6 @@ export class MainController {
     this.header = "The Dent Man";
     this.subtitle = "License Plate Registry";
     this.dontAddPlateToDB = false;
-    this.ranSearch = false;
     this.bannerClass = "hero-unit-neutral";
     this.iconClass = "";
     this.plateToCheck = {
@@ -104,22 +103,37 @@ export class MainController {
     };
   }
 
-  private checkPlateStatus(): void {
-    
+  private checkPlate(): void {
+    if (this.dontAddPlateToDB) {
+      this.checkPlateStatusDontRegister();
+    } else {
+      this.registerPlate();
+    }
   }
 
-  private registerPlate(): void {
-    this.$http.post('/api/plates', this.plateToCheck)
+  private checkPlateStatusDontRegister(): void {
+    this.$http.get(`${PLATE_API_URI}/${this.plateToCheck.state}/${this.plateToCheck.number}`)
     .then(response => {
-      this.updateViewSuccess(response);
-      this.ranSearch = true;
-    },response => {
       this.updateViewError(response);
-      this.ranSearch = true;
+    },response => {
+      if (response.status === 404) {
+        this.updateViewSuccess();
+      } else {
+        this.updateViewError(response);
+      }
     });
   }
 
-  private updateViewSuccess(response: any): void {
+  private registerPlate(): void {
+    this.$http.post(PLATE_API_URI, this.plateToCheck)
+    .then(response => {
+      this.updateViewSuccess();
+    },response => {
+      this.updateViewError(response);
+    });
+  }
+
+  private updateViewSuccess(): void {
     this.bannerClass = "hero-unit-success";
     this.iconClass = "glyphicon glyphicon-ok-circle";
     this.header = "Good to Go!";
@@ -134,16 +148,24 @@ export class MainController {
   private updateViewError(response: any): void {
     let statusCode: number = response.status;
     this.iconClass = "glyphicon glyphicon-ban-circle";
-    if (statusCode === 409) {
-      let timeString = moment(response.data.createdAt).format('MMMM Do YYYY, h:mm:ss a');
-      this.bannerClass = "hero-unit-failure";
-      this.header = "Already Checked"
-      this.subtitle = `This plate was first checked on ${timeString}.`;
+    if (statusCode === 409 || statusCode === 200) {
+      this.setPlateAlreadyChecked(response);
     } else {
-      this.header = "Error";
-      this.bannerClass = "hero-unit-failure";
-      this.subtitle = "Unable to check license plate. Please try again."
+      this.setError();
     }
+  }
+
+  private setPlateAlreadyChecked(response: any): void {
+    let timeString = moment(response.data.createdAt).format('MMMM Do YYYY, h:mm:ss a');
+    this.bannerClass = "hero-unit-failure";
+    this.header = "Already Checked"
+    this.subtitle = `This plate was first checked on ${timeString}.`;
+  }
+
+  private setError(): void {
+    this.header = "Error";
+    this.bannerClass = "hero-unit-failure";
+    this.subtitle = "Unable to check license plate. Please try again."
   }
 }
 
