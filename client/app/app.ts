@@ -14,7 +14,7 @@ import 'angular-ui-bootstrap';
 
 
 
-import {routeConfig} from './app.config';
+import {appConfig} from './app.config';
 
 import _Auth from '../components/auth/auth.module';
 import account from './account';
@@ -47,7 +47,7 @@ angular.module('plateCheckerApp', [
 
   util
 ])
-  .config(routeConfig)
+  .config(appConfig)
   .run(function($rootScope, $location, Auth) {
     'ngInject';
     // Redirect to login if route requires auth and you're not logged in

@@ -81,9 +81,18 @@ export function show(req, res) {
 
 // Creates a new Plate in the DB
 export function create(req, res) {
-  return Plate.create(req.body)
-    .then(respondWithResult(res, 201))
-    .catch(handleError(res));
+  return Plate.findOne({number: req.body.number, state: req.body.state}).exec((err, plate) => {
+    if (err) {
+      return res.status(500).json({message: err});
+    } else if (!plate) {
+      let plateToAdd = req.body;
+      plateToAdd.createdAt = Date.now();
+      return Plate.create(plateToAdd)
+        .then(respondWithResult(res, 201))
+        .catch(handleError(res));
+    }
+    return res.status(409).json(plate);
+  });
 }
 
 // Upserts the given Plate in the DB at the specified ID
