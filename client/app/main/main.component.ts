@@ -21,6 +21,7 @@ export class MainController {
   private subtitle: string;
   private iconClass: string;
   private dontAddPlateToDB: boolean;
+  private plateForm;
 
   private states: string[] = [
     'Alabama',
@@ -143,6 +144,7 @@ export class MainController {
     } else {
       this.subtitle += " This plate has been registered as checked."
     }
+    this.plateForm.$setPristine();
   }
 
   private updateViewError(response: any): void {
@@ -153,6 +155,7 @@ export class MainController {
     } else {
       this.setError();
     }
+    this.plateForm.$setPristine();
   }
 
   private setPlateAlreadyChecked(response: any): void {
