@@ -1,11 +1,11 @@
 /**
  * Using Rails-like standard naming convention for endpoints.
- * GET     /api/plates              ->  index
- * POST    /api/plates              ->  create
- * GET     /api/plates/:id          ->  show
- * PUT     /api/plates/:id          ->  upsert
- * PATCH   /api/plates/:id          ->  patch
- * DELETE  /api/plates/:id          ->  destroy
+ * GET     /api/plates                 ->  index
+ * POST    /api/plates                 ->  create
+ * GET     /api/plates/:state/:number  ->  show
+ * PUT     /api/plates/:id             ->  upsert
+ * PATCH   /api/plates/:id             ->  patch
+ * DELETE  /api/plates/:id             ->  destroy
  */
 
 'use strict';
@@ -73,7 +73,7 @@ export function index(req, res) {
 
 // Gets a single Plate from the DB
 export function show(req, res) {
-  return Plate.findById(req.params.id).exec()
+  return Plate.findOne({number: req.params.number, state: req.params.state}).exec()
     .then(handleEntityNotFound(res))
     .then(respondWithResult(res))
     .catch(handleError(res));

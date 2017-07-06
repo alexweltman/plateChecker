@@ -6,12 +6,13 @@
   </div>
 </header>
 <div class="container">
-  <form class="plateForm" ng-submit="$ctrl.registerPlate()">
+  <form name="$ctrl.plateForm" class="plateForm" ng-submit="$ctrl.checkPlate()">
     <div class="form-group">
       <label for="exampleInputEmail1">Plate Number</label>
       <input
         type="text"
         ng-model="$ctrl.plateToCheck.number"
+        ng-change="$ctrl.plateToCheck.number = $ctrl.plateToCheck.number.toUpperCase()"
         class="form-control input-lg"
         id="plateNumber"
         maxlength="7" required>
@@ -30,16 +31,21 @@
           ng-model="$ctrl.dontAddPlateToDB"> Do not add plate to registry.
       </label>
     </div>
-    <button
-      type="submit"
-      ng-show="!$ctrl.ranSearch"
-      class="btn btn-lg btn-primary btn-block">
-        <i class="glyphicon glyphicon-search"></i> Check License Plate</button>
-    <button
-      type="button"
-      ng-show="$ctrl.ranSearch"
-      ng-click="$ctrl.resetVals()"
-      class="btn btn-lg btn-warning btn-block">
-      <i class="glyphicon glyphicon-refresh"></i> Clear Selection</button>
+    <div class="btn-group-justified">
+      <div class="btn-group" role="group">
+        <button
+          type="submit"
+          ng-disabled="$ctrl.plateForm.$pristine"
+          class="btn btn-lg col-lg-6 btn-primary">
+            <i class="glyphicon glyphicon-search"></i> Check Plate</button>
+      </div>
+      <div class="btn-group" role="group">
+        <button
+          type="button"
+          ng-click="$ctrl.resetVals()"
+          class="btn btn-lg col-lg-6 btn-warning">
+          <i class="glyphicon glyphicon-refresh"></i> Reset</button>
+        </div>
+      </div>
   </form>
 </div>
