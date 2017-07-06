@@ -12,6 +12,7 @@
       <input
         type="text"
         ng-model="$ctrl.plateToCheck.number"
+        ng-change="$ctrl.plateToCheck.number = $ctrl.plateToCheck.number.toUpperCase()"
         class="form-control input-lg"
         id="plateNumber"
         maxlength="7" required>
