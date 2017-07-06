@@ -104,6 +104,10 @@ export class MainController {
     };
   }
 
+  private checkPlateStatus(): void {
+    
+  }
+
   private registerPlate(): void {
     this.$http.post('/api/plates', this.plateToCheck)
     .then(response => {
