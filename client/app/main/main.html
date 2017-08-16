@@ -11,8 +11,8 @@
       <label for="exampleInputEmail1">Plate Number</label>
       <input
         type="text"
-        ng-model="$ctrl.plateToCheck.number"
-        ng-change="$ctrl.plateToCheck.number = $ctrl.plateToCheck.number.toUpperCase()"
+        ng-model="$ctrl.licensePlate.number"
+        ng-change="$ctrl.licensePlate.number = $ctrl.licensePlate.number.toUpperCase()"
         class="form-control input-lg"
         id="plateNumber"
         maxlength="7" required>
@@ -21,7 +21,7 @@
     	<label for="state">State</label>
       <select
         class="form-control input-lg"
-        ng-model="$ctrl.plateToCheck.state"
+        ng-model="$ctrl.licensePlate.state"
         ng-options="state for state in $ctrl.states" required></select>
     </div>
     <div class="checkbox">
