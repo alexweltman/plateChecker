@@ -4,6 +4,12 @@
     <h2>{{$ctrl.header}}</h2>
     <p class="lead">{{$ctrl.subtitle}}</p>
   </div>
+  <button
+    type="button"
+    ng-show="$ctrl.licensePlate._id"
+    ng-click="$ctrl.uncheckCurrentPlate()"
+    class="btn btn-lg col-lg-6 btn-default">
+    <i class="glyphicon glyphicon-remove"></i> Uncheck</button>
 </header>
 <div class="container">
   <form name="$ctrl.plateForm" class="plateForm" ng-submit="$ctrl.checkPlate()">
@@ -11,8 +17,8 @@
       <label for="exampleInputEmail1">Plate Number</label>
       <input
         type="text"
-        ng-model="$ctrl.plateToCheck.number"
-        ng-change="$ctrl.plateToCheck.number = $ctrl.plateToCheck.number.toUpperCase()"
+        ng-model="$ctrl.licensePlate.number"
+        ng-change="$ctrl.licensePlate.number = $ctrl.licensePlate.number.toUpperCase()"
         class="form-control input-lg"
         id="plateNumber"
         maxlength="7" required>
@@ -21,7 +27,7 @@
     	<label for="state">State</label>
       <select
         class="form-control input-lg"
-        ng-model="$ctrl.plateToCheck.state"
+        ng-model="$ctrl.licensePlate.state"
         ng-options="state for state in $ctrl.states" required></select>
     </div>
     <div class="checkbox">

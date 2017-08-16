@@ -6,6 +6,8 @@ const PLATE_API_URI: string = "/api/plates";
 import routing from './main.routes';
 
 export interface LicensePLate {
+  _id?: string,
+  __v?: string,
   number: string,
   state: string,
   addedBy: string,
@@ -15,7 +17,7 @@ export interface LicensePLate {
 export class MainController {
   private $http;
   private $scope;
-  private plateToCheck: LicensePlate;
+  private licensePlate: LicensePlate;
   private bannerClass: string;
   private header: string;
   private subtitle: string;
@@ -96,7 +98,7 @@ export class MainController {
     this.dontAddPlateToDB = false;
     this.bannerClass = "hero-unit-neutral";
     this.iconClass = "";
-    this.plateToCheck = {
+    this.licensePlate = {
       number: "",
       state: DEFAULT_STATE,
       addedBy: "",
@@ -104,7 +106,19 @@ export class MainController {
     };
   }
 
+  private clearOldPlateVals(): void {
+    this.licensePlate = {
+      number: this.licensePlate.number,
+      state: this.licensePlate.state,
+      addedBy: "",
+      createdAt: 0,
+    };
+    delete this.licensePlate.__v;
+    delete this.licensePlate._id;
+  }
+
   private checkPlate(): void {
+    this.clearOldPlateVals();
     if (this.dontAddPlateToDB) {
       this.checkPlateStatusDontRegister();
     } else {
@@ -113,12 +127,13 @@ export class MainController {
   }
 
   private checkPlateStatusDontRegister(): void {
-    this.$http.get(`${PLATE_API_URI}/${this.plateToCheck.state}/${this.plateToCheck.number}`)
+    this.$http.get(`${PLATE_API_URI}/${this.licensePlate.state}/${this.licensePlate.number}`)
     .then(response => {
       this.updateViewError(response);
     },response => {
+      response.data = this.licensePlate;
       if (response.status === 404) {
-        this.updateViewSuccess();
+        this.updateViewSuccess(response);
       } else {
         this.updateViewError(response);
       }
@@ -126,15 +141,27 @@ export class MainController {
   }
 
   private registerPlate(): void {
-    this.$http.post(PLATE_API_URI, this.plateToCheck)
+    this.$http.post(PLATE_API_URI, this.licensePlate)
     .then(response => {
-      this.updateViewSuccess();
+      this.updateViewSuccess(response);
     },response => {
       this.updateViewError(response);
     });
   }
 
-  private updateViewSuccess(): void {
+  private uncheckCurrentPlate(): void {
+    if (window.confirm("Are you sure you want to uncheck this plate? This cannot be undone.")) {
+      this.$http.delete(`${PLATE_API_URI}/${this.licensePlate._id}`)
+      .then(response => {
+        if (response.status === 204) {
+          this.resetVals();
+        }
+      });
+    }
+  }
+
+  private updateViewSuccess(response: any): void {
+    this.licensePlate = response.data;
     this.bannerClass = "hero-unit-success";
     this.iconClass = "glyphicon glyphicon-ok-circle";
     this.header = "Good to Go!";
@@ -151,6 +178,7 @@ export class MainController {
     let statusCode: number = response.status;
     this.iconClass = "glyphicon glyphicon-ban-circle";
     if (statusCode === 409 || statusCode === 200) {
+      this.licensePlate = response.data;
       this.setPlateAlreadyChecked(response);
     } else {
       this.setError();
