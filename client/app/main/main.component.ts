@@ -106,7 +106,19 @@ export class MainController {
     };
   }
 
+  private clearOldPlateVals(): void {
+    this.licensePlate = {
+      number: this.licensePlate.number,
+      state: this.licensePlate.state,
+      addedBy: "",
+      createdAt: 0,
+    };
+    delete this.licensePlate.__v;
+    delete this.licensePlate._id;
+  }
+
   private checkPlate(): void {
+    this.clearOldPlateVals();
     if (this.dontAddPlateToDB) {
       this.checkPlateStatusDontRegister();
     } else {
@@ -119,6 +131,7 @@ export class MainController {
     .then(response => {
       this.updateViewError(response);
     },response => {
+      response.data = this.licensePlate;
       if (response.status === 404) {
         this.updateViewSuccess(response);
       } else {
@@ -136,9 +149,19 @@ export class MainController {
     });
   }
 
+  private uncheckCurrentPlate(): void {
+    if (window.confirm("Are you sure you want to uncheck this plate? This cannot be undone.")) {
+      this.$http.delete(`${PLATE_API_URI}/${this.licensePlate._id}`)
+      .then(response => {
+        if (response.status === 204) {
+          this.resetVals();
+        }
+      });
+    }
+  }
+
   private updateViewSuccess(response: any): void {
     this.licensePlate = response.data;
-    console.log(this.licensePlate);
     this.bannerClass = "hero-unit-success";
     this.iconClass = "glyphicon glyphicon-ok-circle";
     this.header = "Good to Go!";
