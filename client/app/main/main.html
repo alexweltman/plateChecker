@@ -18,7 +18,7 @@
       <input
         type="text"
         ng-model="$ctrl.licensePlate.number"
-        ng-change="$ctrl.licensePlate.number = $ctrl.licensePlate.number.toUpperCase()"
+        ng-change="$ctrl.licensePlate.number = $ctrl.autoFormat($ctrl.licensePlate.number)"
         class="form-control input-lg"
         id="plateNumber"
         maxlength="7" required>

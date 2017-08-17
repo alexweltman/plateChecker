@@ -198,6 +198,10 @@ export class MainController {
     this.bannerClass = "hero-unit-failure";
     this.subtitle = "Unable to check license plate. Please try again."
   }
+
+  private autoFormat(plateNumber: string): string {
+    return plateNumber.replace(/ /g,'').toUpperCase();
+  }
 }
 
 export default angular.module('plateCheckerApp.main', [
