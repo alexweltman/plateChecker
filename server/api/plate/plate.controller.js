@@ -75,10 +75,19 @@ export function index(req, res) {
 
 // Gets a single Plate from the DB
 export function show(req, res) {
-  return Plate.findOne({number: req.params.number, state: req.params.state}).exec()
-    .then(handleEntityNotFound(res))
-    .then(respondWithResult(res))
-    .catch(handleError(res));
+  req.checkParams('number', 'may only contain letters and numbers').isAlphanumeric();
+  req.checkParams('number', 'may only contain uppercase characters').isUppercase();
+  req.checkParams('number', 'must contain between 1 and 7 characters').isLength({min:1, max: 7});
+  req.checkParams('state', 'must be a valid US state or territory').isIn(states);
+  req.getValidationResult().then(result => {
+    if (!result.isEmpty()) {
+      return res.status(400).json(validatorError.json(result.array()));
+    }
+    return Plate.findOne({number: req.params.number, state: req.params.state}).exec()
+      .then(handleEntityNotFound(res))
+      .then(respondWithResult(res))
+      .catch(handleError(res));
+  });
 }
 
 // Creates a new Plate in the DB
