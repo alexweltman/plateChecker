@@ -6,6 +6,8 @@
 
 import express from 'express';
 import mongoose from 'mongoose';
+var bodyParser = require('body-parser');
+var expressValidator = require('express-validator');
 mongoose.Promise = require('bluebird');
 import config from './config/environment';
 import http from 'http';
@@ -20,6 +22,11 @@ mongoose.connection.on('error', function(err) {
 
 // Setup server
 var app = express();
+
+//configure express-validator
+app.use(bodyParser({ extended: true }));
+app.use(expressValidator([]));
+
 var server = http.createServer(app);
 require('./config/express').default(app);
 require('./routes').default(app);

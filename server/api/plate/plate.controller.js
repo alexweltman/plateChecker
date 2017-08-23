@@ -12,6 +12,8 @@
 
 import jsonpatch from 'fast-json-patch';
 import Plate from './plate.model';
+import validatorError from '../../services/validatorError';
+import states from '../../services/states';
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -81,17 +83,27 @@ export function show(req, res) {
 
 // Creates a new Plate in the DB
 export function create(req, res) {
-  return Plate.findOne({number: req.body.number, state: req.body.state}).exec((err, plate) => {
-    if (err) {
-      return res.status(500).json({message: err});
-    } else if (!plate) {
-      let plateToAdd = req.body;
-      plateToAdd.createdAt = Date.now();
-      return Plate.create(plateToAdd)
-        .then(respondWithResult(res, 201))
-        .catch(handleError(res));
+  req.checkBody('number', 'may only contain letters and numbers').isAlphanumeric();
+  req.checkBody('number', 'may only contain uppercase characters').isUppercase();
+  req.checkBody('number', 'must contain between 1 and 7 characters').isLength({min:1, max: 7});
+  req.checkBody('state', 'must be a valid US state or territory').isIn(states);
+
+  req.getValidationResult().then(result => {
+    if (!result.isEmpty()) {
+      return res.status(400).json(validatorError.json(result.array()));
     }
-    return res.status(409).json(plate);
+    return Plate.findOne({number: req.body.number, state: req.body.state}).exec((err, plate) => {
+      if (err) {
+        return res.status(500).json({message: err});
+      } else if (!plate) {
+        let plateToAdd = req.body;
+        plateToAdd.createdAt = Date.now();
+        return Plate.create(plateToAdd)
+          .then(respondWithResult(res, 201))
+          .catch(handleError(res));
+      }
+      return res.status(409).json(plate);
+    });
   });
 }
 
