@@ -10,7 +10,7 @@ export default class PlateValidator {
   }
 
   public validate(plateNumber: string): void {
-    this.validateNotEmpty(plateNumber)
+    this.validateNotEmpty(plateNumber);
     if (this.valid) this.validateAlphaNum(plateNumber);
   }
 
