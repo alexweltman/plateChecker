@@ -4,7 +4,7 @@ const moment = require('moment');
 const DEFAULT_STATE: string = "Colorado";
 const PLATE_API_URI: string = "/api/plates";
 import routing from './main.routes';
-
+import PlateValidator from '../../services/validator.ts';
 export interface LicensePLate {
   _id?: string,
   __v?: string,
@@ -16,6 +16,7 @@ export interface LicensePLate {
 
 export class MainController {
   private $http;
+  private plateValidator;
   private $scope;
   private licensePlate: LicensePlate;
   private bannerClass: string;
@@ -89,6 +90,7 @@ export class MainController {
   /*@ngInject*/
   public constructor($http) {
     this.$http = $http;
+    this.plateValidator = new PlateValidator();
     this.resetVals();
   }
 
@@ -98,6 +100,7 @@ export class MainController {
     this.dontAddPlateToDB = false;
     this.bannerClass = "hero-unit-neutral";
     this.iconClass = "";
+    this.plateValidator.reset();
     this.licensePlate = {
       number: "",
       state: DEFAULT_STATE,
@@ -199,8 +202,14 @@ export class MainController {
     this.subtitle = "Unable to check license plate. Please try again."
   }
 
-  private autoFormat(plateNumber: string): string {
-    return plateNumber.replace(/ /g,'').toUpperCase();
+  private onPlateNumberChange(plateNumber: string) {
+    this.autoFormat(plateNumber);
+    this.plateValidator.validate(this.licensePlate.number);
+  }
+
+  private autoFormat(plateNumber: string): void {
+    plateNumber = plateNumber || "";
+    this.licensePlate.number = plateNumber.toUpperCase();
   }
 }
 

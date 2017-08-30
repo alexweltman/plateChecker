@@ -14,14 +14,19 @@
 <div class="container">
   <form name="$ctrl.plateForm" class="plateForm" ng-submit="$ctrl.checkPlate()">
     <div class="form-group">
-      <label for="exampleInputEmail1">Plate Number</label>
+      <label for="plateNumber">Plate Number</label>
       <input
         type="text"
         ng-model="$ctrl.licensePlate.number"
-        ng-change="$ctrl.licensePlate.number = $ctrl.autoFormat($ctrl.licensePlate.number)"
+        ng-change="$ctrl.onPlateNumberChange($ctrl.licensePlate.number)"
+        ng-trim="false"
         class="form-control input-lg"
         id="plateNumber"
-        maxlength="7" required>
+        maxlength="7">
+        <span
+          ng-show="$ctrl.plateValidator.hasError()"
+          class="error text-danger">{{ $ctrl.plateValidator.getMessage()}}
+        </span>
     </div>
     <div class="form-group">
     	<label for="state">State</label>
@@ -41,7 +46,7 @@
       <div class="btn-group" role="group">
         <button
           type="submit"
-          ng-disabled="$ctrl.plateForm.$pristine"
+          ng-disabled="$ctrl.plateForm.$pristine || $ctrl.plateValidator.hasError()"
           class="btn btn-lg col-lg-6 btn-primary">
             <i class="glyphicon glyphicon-search"></i> Check Plate</button>
       </div>
