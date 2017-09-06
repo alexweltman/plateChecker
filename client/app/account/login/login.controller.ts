@@ -1,7 +1,5 @@
 'use strict';
 
-//import logo from '../../components/logo/logo.component.ts';
-
 // @flow
 interface User {
   name: string;
