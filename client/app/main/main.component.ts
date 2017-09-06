@@ -3,6 +3,7 @@ const uiRouter = require('angular-ui-router');
 const moment = require('moment');
 const DEFAULT_STATE: string = "Colorado";
 const PLATE_API_URI: string = "/api/plates";
+const STATE_API_URI: string = "/api/states";
 import routing from './main.routes';
 import PlateValidator from '../../services/validator.ts';
 export interface LicensePLate {
@@ -25,72 +26,13 @@ export class MainController {
   private iconClass: string;
   private dontAddPlateToDB: boolean;
   private plateForm;
-
-  private states: string[] = [
-    'Alabama',
-    'Alaska',
-    'American Samoa',
-    'Arizona',
-    'Arkansas',
-    'California',
-    'Colorado',
-    'Connecticut',
-    'Delaware',
-    'District of Columbia',
-    'Federated States of Micronesia',
-    'Florida',
-    'Georgia',
-    'Guam',
-    'Hawaii',
-    'Idaho',
-    'Illinois',
-    'Indiana',
-    'Iowa',
-    'Kansas',
-    'Kentucky',
-    'Louisiana',
-    'Maine',
-    'Marshall Islands',
-    'Maryland',
-    'Massachusetts',
-    'Michigan',
-    'Minnesota',
-    'Mississippi',
-    'Missouri',
-    'Montana',
-    'Nebraska',
-    'Nevada',
-    'New Hampshire',
-    'New Jersey',
-    'New Mexico',
-    'New York',
-    'North Carolina',
-    'North Dakota',
-    'Northern Mariana Islands',
-    'Ohio','Oklahoma',
-    'Oregon',
-    'Palau',
-    'Pennsylvania',
-    'Puerto Rico',
-    'Rhode Island',
-    'South Carolina',
-    'South Dakota',
-    'Tennessee',
-    'Texas',
-    'Utah',
-    'Vermont',
-    'Virgin Island',
-    'Virginia',
-    'Washington',
-    'West Virginia',
-    'Wisconsin',
-    'Wyoming'
-  ];
+  private states: string[];
 
   /*@ngInject*/
   public constructor($http) {
     this.$http = $http;
     this.plateValidator = new PlateValidator();
+    this.fetchStates();
     this.resetVals();
   }
 
@@ -210,6 +152,15 @@ export class MainController {
   private autoFormat(plateNumber: string): void {
     plateNumber = plateNumber || "";
     this.licensePlate.number = plateNumber.toUpperCase();
+  }
+
+  private fetchStates(): void {
+    this.$http.get(`${STATE_API_URI}`)
+    .then(response => {
+      console.log(response);
+    },response => {
+      console.log('Unable to fetch states.');
+    });
   }
 }
 
