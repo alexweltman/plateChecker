@@ -19,6 +19,7 @@ import {appConfig} from './app.config';
 import _Auth from '../components/auth/auth.module';
 import account from './account';
 import navbar from '../components/navbar/navbar.component';
+import logo from '../components/logo/logo.component';
 import main from './main/main.component';
 import util from '../components/util/util.module';
 
@@ -39,6 +40,7 @@ angular.module('plateCheckerApp', [
   'validation.match',
   'ui.bootstrap',
   navbar,
+  logo,
   main,
   util
 ])

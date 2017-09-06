@@ -20,11 +20,9 @@ body {
   background-color: #b4c8e8;
 }
 
-.img-responsive {
-  margin-bottom: 4rem;
-}
 // Component styles are injected through gulp
 /* inject:scss */
 @import 'main/main';
+@import '../components/logo/logo';
 @import '../components/navbar/navbar';
 /* endinject */
