@@ -3,14 +3,14 @@
 const angular = require('angular');
 
 export class NavbarComponent {
-  menu = [{
+  private menu = [{
     'title': 'Home',
     'state': 'main'
   }];
-  isLoggedIn: Function;
-  isAdmin: Function;
-  getCurrentUser: Function;
-  isCollapsed = true;
+  private isLoggedIn: Function;
+  private isAdmin: Function;
+  private getCurrentUser: Function;
+  private isCollapsed: boolean = true;
 
   constructor(Auth) {
     'ngInject';
