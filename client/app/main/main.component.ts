@@ -95,10 +95,10 @@ export class MainController {
   }
 
   private resetVals(): void {
-    this.header = "The Dent Man";
-    this.subtitle = "License Plate Registry";
+    this.header = null;
+    this.subtitle = null;
     this.dontAddPlateToDB = false;
-    this.bannerClass = "hero-unit-neutral";
+    this.bannerClass = null;
     this.iconClass = "";
     this.plateValidator.reset();
     this.licensePlate = {
