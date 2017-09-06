@@ -25,7 +25,6 @@ body {
 }
 // Component styles are injected through gulp
 /* inject:scss */
-@import 'admin/admin';
 @import 'main/main';
 @import '../components/navbar/navbar';
 /* endinject */
