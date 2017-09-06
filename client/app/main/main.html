@@ -1,5 +1,9 @@
 <header ng-class="$ctrl.bannerClass" id="banner">
-  <div class="container">
+  <img
+    src="/assets/images/logo.png"
+    class="img-responsive"
+    ng-show="!$ctrl.bannerClass"/>
+  <div class="container" ng-show="$ctrl.bannerClass">
     <h1><i ng-class="$ctrl.iconClass" ng-show="!!$ctrl.iconClass"></i></h1>
     <h2>{{$ctrl.header}}</h2>
     <p class="lead">{{$ctrl.subtitle}}</p>

@@ -16,6 +16,13 @@ $fa-font-path: '/assets/fonts/font-awesome/';
   padding: 0.2em 0;
 }
 
+body {
+  background-color: #b4c8e8;
+}
+
+.img-responsive {
+  margin-bottom: 4rem;
+}
 // Component styles are injected through gulp
 /* inject:scss */
 @import 'admin/admin';

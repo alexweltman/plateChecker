@@ -7,13 +7,13 @@ interface User {
 }
 
 export default class LoginController {
-  user: User = {
+  private user: User = {
     name: '',
     email: '',
     password: ''
   };
-  errors = {login: undefined};
-  submitted = false;
+  private error: string;
+  private submitted : boolean = false;
   Auth;
   $state;
 
@@ -21,6 +21,7 @@ export default class LoginController {
   constructor(Auth, $state) {
     this.Auth = Auth;
     this.$state = $state;
+    this.error = undefined;
   }
 
   login(form) {
@@ -36,8 +37,25 @@ export default class LoginController {
         this.$state.go('main');
       })
       .catch(err => {
-        this.errors.login = err.message;
+        this.error = err.message;
       });
     }
+  }
+
+  private checkFields(form) {
+    if (!this.allFieldsSet(form) && form.email.$dirty && form.password.$dirty) {
+      this.error = "All fields are required";
+    } else {
+      this.error = undefined;
+    }
+  }
+
+  private allFieldsSet(form) {
+    let set: boolean  =
+      this.user.email &&
+      this.user.email !== '' &&
+      this.user.password &&
+      this.user.password !== '';
+    return set && form.$dirty;
   }
 }
