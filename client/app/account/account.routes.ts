@@ -21,19 +21,5 @@ export default function routes($stateProvider) {
           Auth.logout();
           $state.go(referrer);
         }
-      })
-      .state('signup', {
-        url: '/signup',
-        template: require('./signup/signup.html'),
-        controller: 'SignupController',
-        controllerAs: 'vm'
-      })
-      .state('settings', {
-        url: '/settings',
-        template: require('./settings/settings.html'),
-        controller: 'SettingsController',
-        controllerAs: 'vm',
-        authenticate: true
       });
 }
-

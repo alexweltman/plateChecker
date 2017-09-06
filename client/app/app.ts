@@ -18,10 +18,8 @@ import {appConfig} from './app.config';
 
 import _Auth from '../components/auth/auth.module';
 import account from './account';
-import admin from './admin';
 import navbar from '../components/navbar/navbar.component';
 import main from './main/main.component';
-import constants from './app.constants';
 import util from '../components/util/util.module';
 
 
@@ -38,13 +36,10 @@ angular.module('plateCheckerApp', [
 
   _Auth,
   account,
-  admin,
   'validation.match',
   'ui.bootstrap',
   navbar,
   main,
-  constants,
-
   util
 ])
   .config(appConfig)
