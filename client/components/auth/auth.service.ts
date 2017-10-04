@@ -183,17 +183,6 @@ export function AuthService($location, $http, $cookies, $q, appConfig, Util, Use
 
      /**
       * Check if a user is an admin
-      *   (synchronous|asynchronous)
-      *
-      * @param  {Function|*} callback - optional, function(is)
-      * @return {Bool|Promise}
-      */
-    isAdmin(...args) {
-      return Auth.hasRole(...Reflect.apply([].concat, ['admin'], args));
-    },
-
-     /**
-      * Check if a user is an admin
       *
       * @return {Bool}
       */
