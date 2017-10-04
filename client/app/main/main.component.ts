@@ -157,7 +157,6 @@ export class MainController {
   private fetchStates(): void {
     this.$http.get(`${STATE_API_URI}`)
     .then(response => {
-      console.log(response);
       this.states = response.data;
     },response => {
       console.log('Unable to fetch states.');
