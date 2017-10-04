@@ -2,12 +2,13 @@
 
 var express = require('express');
 var controller = require('./plate.controller');
+import * as auth from '../../auth/auth.service';
 
 var router = express.Router();
 
-router.get('/', controller.index);
-router.get('/:state/:number', controller.show);
-router.post('/', controller.create);
-router.delete('/:id', controller.destroy);
+router.get('/', auth.isAuthenticated(), controller.index);
+router.get('/:state/:number', auth.isAuthenticated(), controller.show);
+router.post('/', auth.isAuthenticated(), controller.create);
+router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
 module.exports = router;
