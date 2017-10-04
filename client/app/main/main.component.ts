@@ -6,7 +6,8 @@ const PLATE_API_URI: string = "/api/plates";
 const STATE_API_URI: string = "/api/states";
 import routing from './main.routes';
 import PlateValidator from '../../services/validator.ts';
-export interface LicensePLate {
+
+export interface LicensePlate {
   _id?: string,
   __v?: string,
   number: string,
