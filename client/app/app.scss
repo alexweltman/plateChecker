@@ -20,6 +20,11 @@ body {
   background-color: #39404c;
 }
 
+.text-danger {
+  color: #f97573
+}
+
+
 // Component styles are injected through gulp
 /* inject:scss */
 @import 'main/main';
