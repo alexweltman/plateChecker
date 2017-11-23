@@ -1,6 +1,7 @@
 'use strict';
 /* eslint no-sync: 0 */
 const angular = require('angular');
+const DOWNLOAD_URI = "/api/plates/download";
 
 export class NavbarComponent {
   private menu = [{
@@ -17,6 +18,10 @@ export class NavbarComponent {
     this.isLoggedIn = Auth.isLoggedInSync;
     this.isAdmin = Auth.isAdminSync;
     this.getCurrentUser = Auth.getCurrentUserSync;
+  }
+
+  private download() {
+    window.location.href = DOWNLOAD_URI;
   }
 
 }

@@ -9,6 +9,7 @@ var router = express.Router();
 router.get('/', auth.isAuthenticated(), controller.index);
 router.get('/:state/:number', auth.isAuthenticated(), controller.show);
 router.post('/', auth.isAuthenticated(), controller.create);
+router.get('/download', controller.download);
 router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
 module.exports = router;

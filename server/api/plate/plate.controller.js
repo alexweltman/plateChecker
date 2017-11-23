@@ -14,6 +14,8 @@ import jsonpatch from 'fast-json-patch';
 import Plate from './plate.model';
 import validatorError from '../../services/validatorError';
 import states from '../../services/states';
+import * as fs from 'fs';
+const csvify = require('../../services/csvify');
 
 function respondWithResult(res, statusCode) {
   statusCode = statusCode || 200;
@@ -106,6 +108,7 @@ export function create(req, res) {
         return res.status(500).json({message: err});
       } else if (!plate) {
         let plateToAdd = req.body;
+        plateToAdd.addedBy = req.user.name;
         plateToAdd.createdAt = Date.now();
         return Plate.create(plateToAdd)
           .then(respondWithResult(res, 201))
@@ -145,4 +148,31 @@ export function destroy(req, res) {
     .then(handleEntityNotFound(res))
     .then(removeEntity(res))
     .catch(handleError(res));
+}
+
+export function download(req, res) {
+  var started = false;
+  function start(response) {
+    response.setHeader('Content-disposition', 'attachment; filename=LicensePlates.csv');
+    response.contentType('csv');
+    response.write(csvify.headers + '\n');
+    started = true;
+  }
+
+  Plate.find()
+    .sort('createdAt')
+    .cursor()
+    .on('data', function (campaign) {
+      if (!started) {
+        start(res);
+      }
+      res.write(csvify.docToCSV(campaign) + '\n');
+    })
+    .on('close', function () {
+      res.end();
+    })
+    .on('error', function (err) {
+      res.send(500, {err: err, msg: "Failed to get campaigns from db"});
+    });
+
 }
