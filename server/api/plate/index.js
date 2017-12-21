@@ -7,9 +7,10 @@ import * as auth from '../../auth/auth.service';
 var router = express.Router();
 
 router.get('/', auth.isAuthenticated(), controller.index);
+router.get('/download/token', auth.hasRole('admin'), controller.getDownloadToken);
+router.get('/download', auth.hasRole('admin'), controller.download);
 router.get('/:state/:number', auth.isAuthenticated(), controller.show);
 router.post('/', auth.isAuthenticated(), controller.create);
-router.get('/download', controller.download);
 router.delete('/:id', auth.isAuthenticated(), controller.destroy);
 
 module.exports = router;

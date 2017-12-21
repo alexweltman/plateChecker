@@ -14,10 +14,11 @@ import jsonpatch from 'fast-json-patch';
 import Plate from './plate.model';
 import validatorError from '../../services/validatorError';
 import states from '../../services/states';
+import {signToken} from '../../auth/auth.service';
 import * as fs from 'fs';
 const csvify = require('../../services/csvify');
 
-function respondWithResult(res, statusCode) {
+const respondWithResult = (res, statusCode) => {
   statusCode = statusCode || 200;
   return function(entity) {
     if(entity) {
@@ -25,9 +26,9 @@ function respondWithResult(res, statusCode) {
     }
     return null;
   };
-}
+};
 
-function patchUpdates(patches) {
+const patchUpdates = (patches) => {
   return function(entity) {
     try {
       // eslint-disable-next-line prefer-reflect
@@ -38,9 +39,9 @@ function patchUpdates(patches) {
 
     return entity.save();
   };
-}
+};
 
-function removeEntity(res) {
+const removeEntity = (res) => {
   return function(entity) {
     if(entity) {
       return entity.remove()
@@ -51,7 +52,7 @@ function removeEntity(res) {
   };
 }
 
-function handleEntityNotFound(res) {
+const handleEntityNotFound = (res) => {
   return function(entity) {
     if(!entity) {
       res.status(404).end();
@@ -59,14 +60,14 @@ function handleEntityNotFound(res) {
     }
     return entity;
   };
-}
+};
 
-function handleError(res, statusCode) {
+const handleError = (res, statusCode) => {
   statusCode = statusCode || 500;
   return function(err) {
     res.status(statusCode).send(err);
   };
-}
+};
 
 // Gets a list of Plates
 export function index(req, res) {
@@ -150,14 +151,20 @@ export function destroy(req, res) {
     .catch(handleError(res));
 }
 
+export function getDownloadToken(req, res) {
+  const oneMinute = 60;
+  const token = signToken(req.user._id, req.user.role, oneMinute);
+  res.json({ token });
+}
+
 export function download(req, res) {
-  var started = false;
-  function start(response) {
+  let started = false;
+  const start = (response) => {
     response.setHeader('Content-disposition', 'attachment; filename=LicensePlates.csv');
     response.contentType('csv');
     response.write(csvify.headers + '\n');
     started = true;
-  }
+ };
 
   Plate.find()
     .sort('createdAt')
@@ -172,7 +179,7 @@ export function download(req, res) {
       res.end();
     })
     .on('error', function (err) {
-      res.send(500, {err: err, msg: "Failed to get campaigns from db"});
+      res.send(500, {err: err, msg: "Failed to get plates from db"});
     });
 
 }

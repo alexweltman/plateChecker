@@ -4,6 +4,7 @@ const angular = require('angular');
 const DOWNLOAD_URI = "/api/plates/download";
 
 export class NavbarComponent {
+  private $http;
   private menu = [{
     'title': 'Home',
     'state': 'main'
@@ -13,15 +14,26 @@ export class NavbarComponent {
   private getCurrentUser: Function;
   private isCollapsed: boolean = true;
 
-  constructor(Auth) {
+  constructor(Auth, $http) {
     'ngInject';
+    this.$http = $http;
     this.isLoggedIn = Auth.isLoggedInSync;
     this.isAdmin = Auth.isAdminSync;
     this.getCurrentUser = Auth.getCurrentUserSync;
   }
 
   private download() {
-    window.location.href = DOWNLOAD_URI;
+    const ERR = 'Unable to fetch download token.';
+    this.$http.get(`${DOWNLOAD_URI}/token`)
+    .then(response => {
+      if (response.data.token) {
+        window.location.href = `${DOWNLOAD_URI}?access_token=${response.data.token}`;
+      } else {
+        console.log(ERR)
+      }
+    },response => {
+      console.log(ERR);
+    });
   }
 
 }
