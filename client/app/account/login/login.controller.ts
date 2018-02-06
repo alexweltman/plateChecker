@@ -14,6 +14,7 @@ export default class LoginController {
     password: ''
   };
   private error: string;
+  private loginError: string;
   private submitted : boolean = false;
   Auth;
   $state;
@@ -21,11 +22,12 @@ export default class LoginController {
   /*@ngInject*/
   constructor(Auth, $state) {
     this.Auth = Auth;
+    this.Auth.logout();
     this.$state = $state;
     this.error = undefined;
   }
 
-  login(form) {
+  private login(form) {
     this.submitted = true;
 
     if (form.$valid) {
@@ -38,9 +40,14 @@ export default class LoginController {
         this.$state.go('main');
       })
       .catch(err => {
-        this.error = err.message;
+        this.loginError = err.message;
+        console.log("setting error to ", err.message);
       });
     }
+  }
+
+  private hideAlert() {
+    this.loginError = null;
   }
 
   private checkFields(form) {

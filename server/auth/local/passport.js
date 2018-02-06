@@ -1,6 +1,8 @@
 import passport from 'passport';
 import {Strategy as LocalStrategy} from 'passport-local';
 
+const INVALID_LOGIN = "Invalid username or password."
+
 function localAuthenticate(User, email, password, done) {
   User.findOne({
     email: email.toLowerCase()
@@ -8,7 +10,7 @@ function localAuthenticate(User, email, password, done) {
     .then(user => {
       if(!user) {
         return done(null, false, {
-          message: 'This email is not registered.'
+          message: INVALID_LOGIN
         });
       }
       user.authenticate(password, function(authError, authenticated) {
@@ -16,7 +18,7 @@ function localAuthenticate(User, email, password, done) {
           return done(authError);
         }
         if(!authenticated) {
-          return done(null, false, { message: 'This password is not correct.' });
+          return done(null, false, { message: INVALID_LOGIN });
         } else {
           return done(null, user);
         }
