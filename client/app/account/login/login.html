@@ -1,5 +1,12 @@
 <div class="container">
   <logo></logo>
+  <div class="alert alert-danger alert-dismissible" role="alert" ng-show="vm.loginError" >
+    <span type="button" class="close" ng-click="vm.hideAlert()" data-dismiss="alert" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </span>
+    {{vm.loginError}}
+  </div>
+
   <form class="form-signin" name="form" ng-submit="vm.login(form)" novalidate>
     <div class="form-group">
       <label for="inputEmail" class="sr-only">Email address</label>
@@ -13,7 +20,7 @@
         ng-change="vm.checkFields(form)"
         required autofocus>
     </div>
-    <div class="form-group">
+    <div class="form-group" ng-class="vm.error ? 'has-error' : ''">
       <label for="inputPassword" class="sr-only">Password</label>
       <input
         type="password"
@@ -26,7 +33,7 @@
         required>
         <span
           ng-show="vm.error"
-          class="error text-danger">{{ vm.error}}
+          class="text-danger">{{ vm.error}}
         </span>
     </div>
     <button
