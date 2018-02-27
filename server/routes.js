@@ -6,8 +6,11 @@
 
 import errors from './components/errors';
 import path from 'path';
+const redirectToHTTPS = require('express-http-to-https').redirectToHTTPS;
 
 export default function(app) {
+
+  app.use(redirectToHTTPS([/localhost:(\d{4})/]));
   // Insert routes below
   app.use('/api/states', require('./api/state'));
   app.use('/api/plates', require('./api/plate'));
